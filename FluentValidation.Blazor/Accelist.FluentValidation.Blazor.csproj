@@ -1,55 +1,39 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
-	<PropertyGroup>
-		<TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
-		<Authors>ryanelian</Authors>
-		<Title>FluentValidation.Blazor</Title>
-		<Description>
-Fluent Validation-powered Blazor component for validating standard &lt;EditForm&gt;
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
+    <Authors>Pablo Pioli</Authors>
+    <Title>PPioli.FluentValidation.Blazor</Title>
+    <Description>
+      Fluent Validation-powered Blazor component for validating standard &lt;EditForm&gt;.
+      Fork of https://github.com/ryanelian/FluentValidation.Blazor
+    </Description>
+    <Copyright>2021</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/pablopioli/FluentValidation.Blazor</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/pablopioli/FluentValidation.Blazor</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>5.0.0</Version>
+    <PackageIcon>icon.png</PackageIcon>
+  </PropertyGroup>
 
-https://github.com/ryanelian/FluentValidation.Blazor/blob/master/README.MD
+  <ItemGroup>
+    <None Include="img/icon.png" Pack="true" PackagePath="/" />
+  </ItemGroup>
 
-This library is a direct replacement to the default Blazor &lt;DataAnnotationValidator&gt; with zero configuration required ⚡️ in the application code base.
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="[10.0.4,11.0)" />
+  </ItemGroup>
 
-The &lt;FluentValidation.FluentValidator&gt; component automatically detects the Model data type used by the parent &lt;EditForm&gt; then attempts to acquire the corresponding FluentValidation.IValidator&lt;T&gt; for that model data type.
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+    <PackageReference Include="Microsoft.AspNetCore.Components.Forms" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.0" />
+  </ItemGroup>
 
-For this reason, in addition to coding the usual FluentValidation.AbstractValidator&lt;T&gt; Fluent Validation implementation, you are required to register the FluentValidation.IValidator&lt;T&gt; implementation in the Startup.cs Service Provider (Dependency Injection).
-
-This effectively allows you, dear programmer, to inject required services to your validation implementations for writing amazing custom validation methods! 🔥
-
-Validator parameter may also be passed directly to the component to inline the AbstractValidator implementation instead of relying on .NET Core DI.
-		</Description>
-		<Copyright>2019</Copyright>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<PackageProjectUrl>https://github.com/ryanelian/FluentValidation.Blazor</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/ryanelian/FluentValidation.Blazor</RepositoryUrl>
-		<RepositoryType>Git</RepositoryType>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>5.0.0</Version>
-		<PackageIcon>icon.png</PackageIcon>
-		<PackageReleaseNotes>
-Version 5.0.0 BREAKING CHANGES:
-- Package sub-dependency Microsoft.AspNetCore.Components.Web is changed to Microsoft.AspNetCore.Components.Forms to allow using the library in Xamarin Blazor project!
-- Package is now compatible with both .NET 5.0 and .NET Core 3.1
-		</PackageReleaseNotes>
-	</PropertyGroup>
-
-	<ItemGroup>
-		<None Include="img/icon.png" Pack="true" PackagePath="/" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="FluentValidation" Version="9.3.0" />
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
-		<PackageReference Include="Microsoft.AspNetCore.Components.Forms" Version="3.1.0" />
-		<PackageReference Include="Microsoft.Extensions.Options" Version="3.1.0" />
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
-		<PackageReference Include="Microsoft.AspNetCore.Components.Forms" Version="5.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
-	</ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
+    <PackageReference Include="Microsoft.AspNetCore.Components.Forms" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
+  </ItemGroup>
 
 </Project>
