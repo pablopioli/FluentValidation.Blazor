@@ -1,161 +1,18 @@
 # FluentValidation.Blazor
 
-<a href="https://github.com/ryanelian/FluentValidation.Blazor/blob/master/README.MD">
-    <img align="right" width="128" height="128" src="https://raw.githubusercontent.com/ryanelian/FluentValidation.Blazor/master/FluentValidation.Blazor/img/icon.png" />
-</a>
+## Important
+This is a custom fork of https://github.com/ryanelian/FluentValidation.Blazor
+implementing the changes needed to support FluentValidation 10.
 
-> [Fluent Validation](https://github.com/JeremySkinner/FluentValidation)-powered Blazor component for validating standard \<EditForm> :cyclone: :white_check_mark:
-
-[![GitHub Actions](https://github.com/ryanelian/FluentValidation.Blazor/workflows/.NET%20Core/badge.svg)](https://github.com/ryanelian/FluentValidation.Blazor/actions) [![NuGet](https://badgen.net/nuget/v/Accelist.FluentValidation.Blazor?icon=nuget)](https://www.nuget.org/packages/Accelist.FluentValidation.Blazor)
+When FluentValidation.Blazor supports FluentValidation 10 this repository will be archived.
 
 ## Install
 
 ```
 dotnet add package FluentValidation
-dotnet add package Accelist.FluentValidation.Blazor
+dotnet add package PPioli.FluentValidation.Blazor
 ```
 
 ## Getting Started
 
-This library is a direct replacement to [the default Blazor `<DataAnnotationValidator>`](https://docs.microsoft.com/en-us/aspnet/core/blazor/forms-validation?view=aspnetcore-3.0) with **zero configuration required** :zap: in the application code base:
-
-```html
-<EditForm Model="Form">
-
-
-    <FluentValidator></FluentValidator>
-
-
-    <div class="form-group">
-        <label for="email">Email</label>
-        <InputText id="email" type="email" class="form-control" @bind-Value="Form.Email"></InputText>
-        <ValidationMessage For="() => Form.Email"></ValidationMessage>
-    </div>
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary">
-            <i class="fas fa-chevron-up"></i>
-            Submit
-        </button>
-    </div>
-</EditForm>
-```
-
-```cs
-@code {
-    FormModel Form = new FormModel();
-}
-```
-
-```cs
-public class FormModel
-{
-    public string Email { set; get; }
-}
-
-public class FormModelValidator : AbstractValidator<FormModel>
-{
-    public FormModelValidator()
-    {
-        RuleFor(Q => Q.Email).NotEmpty().EmailAddress().MaximumLength(255);
-    }
-}
-```
-
-The `<FluentValidator>` component automatically detects the `Model` data type used by the parent `<EditForm>` then attempts to acquire the corresponding `FluentValidation.IValidator<T>` for that model data type.
-
-For this reason, [in addition to coding the usual `FluentValidation.AbstractValidator<T> Fluent Validation implementation`](https://fluentvalidation.net/start), **you are required to register the `FluentValidation.IValidator<T>` implementation in the `Startup.cs` Service Provider (Dependency Injection)**:
-
-```cs
-services.AddTransient<IValidator<CreateAccountFormModel>, CreateAccountFormModelValidator>();
-// Alternatively, use FluentValidation.DependencyInjectionExtensions package (read further down below...)
-```
-
-**This effectively allows you, dear programmer, to inject required services to your validation implementations for writing amazing custom validation methods!** :fire:
-
-```cs
-public class FormModelValidator : AbstractValidator<FormModel>
-{
-    readonly AppDbContext DB;
-    readonly IServiceProvider SP;
-
-    public FormModelValidator(AppDbContext db, IServiceProvider sp)
-    {
-        this.DB = db;
-        this.SP = sp;
-
-        RuleFor(Q => Q.Email).NotEmpty().EmailAddress().MaximumLength(255)
-            .Must(BeUniqueEmail).WithMessage("Email address is already registered.");
-    }
-
-    bool BeUniqueEmail(string email)
-    {
-        var exist = DB.Account.Where(Q => Q.Email == email).Any();
-        return (exist == false);
-    }
-}
-```
-
-## Inlined Validator
-
- `Validator` parameter may also be passed directly to the component to inline the `AbstractValidator` implementation instead of relying on .NET Core DI:
-
-```html
-<FluentValidator Validator="Validator"></FluentValidator>
-```
-
-```cs
-@code {
-    FormModelValidator Validator = new FormModelValidator();
-}
-```
-
-## FluentValidation.DependencyInjectionExtensions
-
-```
-dotnet add package FluentValidation.DependencyInjectionExtensions
-```
-
-```cs
-services.AddValidatorsFromAssemblyContaining<Program>();
-```
-
-**Can be used to auto-populate all validators from current application / other project automatically!**
-
-## Nested Objects & Arrays Validation
-
-FluentValidation offers `SetValidator` method for validating nested objects and arrays. Combined with Dependency Injection capability of this component library, a complex form can be validated easily:
-
-```cs
-public class RootValidator : AbstractValidator<Root>
-{
-    public RootValidator(IValidator<Child> childValidator, IValidator<Item> itemValidator)
-    {
-        RuleFor(Q => Q.Child).SetValidator(childValidator);
-        RuleForEach(Q => Q.ArrayOfItems).SetValidator(itemValidator); // Array, List, IList, ...
-    }
-}
-```
-
-**The validators used MUST be registered in the ASP.NET Core service provider!**
-
-> If for some reason Dependency Injection is not possible, the parameter `ChildValidators` (inlined `Dictionary<Type, IValidator>` defining validators used for each children model types) MUST be passed into the component due to technical reasons.
-
-## Repeated Remote Call Warning :warning:
-
-**By default, Fluent Validation does NOT short-circuit the validation chain on first error.**
-
-This may cause performance issues when a validation logic hits the database / remote service multiple times in short burst due to validation triggers on field change!
-
-To reduce the impact of repeated custom validation calls, use:
-
-- `.Cascade(CascadeMode.Stop)` after `RuleFor()` chain,
-
-- Or set `ValidatorOptions.CascadeMode = CascadeMode.Stop;` on `Program.cs` application entry point.
-
-## Why Not Just Use `<DataAnnotationValidator>`?
-
-1. `<DataAnnotationValidator>` cannot use DI services at the moment...
-
-2. ... but [`<DataAnnotationValidator>` also cannot do `AddModelError()`](https://github.com/aspnet/AspNetCore/issues/14524) like Razor Pages. Which rules out validation AFTER form submission!
-
-3. `[ValidationAttribute]` top-level `IsValid()` method cannot be async!
+See https://github.com/ryanelian/FluentValidation.Blazor
